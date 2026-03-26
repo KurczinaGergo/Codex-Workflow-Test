@@ -1,7 +1,7 @@
 # ADR Index
 
 <!-- MAINTAINED BY: Human, after each review session.
-     Claude Code reads this file to select which ADRs to load for a given feature.
+     Codex reads this file to select which ADRs to load for a given feature.
      Do not load individual ADR files without first checking this index.
 
      Tag convention — use these categories consistently:
@@ -15,7 +15,7 @@
 
 ---
 
-## How Claude Code uses this index
+## How Codex uses this index
 
 When starting `$new-feature`, read this index and identify ADRs whose tags overlap
 with the feature's affected layers or topics.
