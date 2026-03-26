@@ -1,0 +1,15 @@
+# Codex CLI local files
+.codex/memory/
+.codex/settings.local.json
+AGENTS.local.md
+
+# Progress archive (generated, not source)
+docs/progress/archive/
+
+# Common
+*.db
+*.db-shm
+*.db-wal
+node_modules/
+**/appsettings.Development.json
+**/appsettings.Local.json
