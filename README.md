@@ -1,100 +1,61 @@
-# AI Workflow Template — Codex CLI
+# WorkTrace AI Workflow Workspace
 
-A repository template for developers who use a **reasoning model** for planning and architecture
-alongside **Codex CLI** for implementation.
-
-The template closes the feedback loop between the two tools: specs flow from planning into
-implementation, and review files, progress records, and documentation proposals flow back.
-
-> **This template is Codex CLI specific.**
-> For the tool-agnostic workflow pattern and the reasoning behind it, see the blog post:
-> [Closing the Loop: A Workflow for Pairing a Reasoning Model with an Agentic Coding Assistant](https://your-handle.github.io/your-blog-post)
->
-> A Claude Code variant of this template (the reference implementation, fully tested) is available at:
-> [github.com/your-handle/claude-code-workflow-template](https://github.com/your-handle/claude-code-workflow-template)
-> _(Note: this Codex CLI variant follows the same workflow pattern but has not been tested in production.)_
+This repository contains the Codex-oriented workflow and living documentation for the WorkTrace MVP.
+It keeps project memory, architecture rules, domain rules, progress tracking, and ADR placeholders in one place so planning and implementation sessions can stay aligned.
 
 ---
 
-## How to use this template
+## What is WorkTrace?
 
-1. Click **Use this template** on GitHub to create your own repository
-2. Fill in `AGENTS.md` with your project's tech stack, architecture rules, and solution structure
-3. Fill in `docs/architecture.md` and `docs/domain-model.md` with your design
-4. Remove all `<!-- FILL IN: ... -->` comment blocks before committing real content
-5. Start a Codex CLI session — it will load `AGENTS.md` automatically
+WorkTrace is a personal, low-friction developer work-tracking system. It tracks:
+- WorkItems as lightweight units of work
+- WorkSessions as time intervals
+- Notes as contextual knowledge
+- Projects as optional grouping
 
-### Invoking skills
-Type `$new-feature`, `$review-ready`, or `$review-fix` in the Codex composer,
-or run `/skills` to browse available skills.
+The MVP is single-user, has no authentication, and deliberately avoids workflow enforcement.
 
 ---
 
-## Repository structure
+## Key References
 
-```
+- `AGENTS.md` - Codex session memory and behavior rules
+- `docs/architecture.md` - layer model, dependency rules, naming, DI, and placement guidance
+- `docs/domain-model.md` - entities, enums, and invariants
+- `docs/progress/index.md` - build status and open architectural questions
+- `docs/progress/design-state.md` - current architectural ground truth
+- `docs/decisions/index.md` - ADR catalog
+
+---
+
+## Repository Structure
+
+```text
 /
-├── AGENTS.md                             ← Loaded by Codex CLI every session
-├── docs/
-│   ├── architecture.md                   ← Living architecture reference
-│   ├── domain-model.md                   ← Entity, enum, and invariant reference
-│   ├── workflow-guide.md                 ← Quick reference for the full workflow
-│   ├── specs/
-│   │   └── _template.md                  ← Copy for every new feature spec
-│   ├── decisions/
-│   │   ├── index.md                      ← ADR tag catalog
-│   │   └── _adr-template.md              ← Copy for every architecture decision record
-│   ├── review/
-│   │   └── _example-review.md            ← Example of a well-written review file
-│   └── progress/
-│       ├── index.md                      ← Feature-level ground truth (patched by Codex CLI)
-│       ├── design-state.md               ← Architectural ground truth (maintained by human)
-│       └── features/
-│           └── _feature-template.md      ← One file per feature branch (additive, never edited)
-└── .codex/
-    └── skills/
-        ├── new-feature/
-        │   └── SKILL.md                  ← $new-feature skill
-        ├── review-ready/
-        │   └── SKILL.md                  ← $review-ready skill
-        └── review-fix/
-            └── SKILL.md                  ← $review-fix skill
+|-- AGENTS.md
+|-- docs/
+|   |-- architecture.md
+|   |-- domain-model.md
+|   |-- workflow-guide.md
+|   |-- specs/
+|   |-- decisions/
+|   |-- review/
+|   `-- progress/
+`-- .codex/
+    `-- skills/
 ```
 
 ---
 
-## The core loop
+## Current Project State
 
-```
-Reasoning partner → spec → Codex CLI
-                               │
-                          $review-ready
-                               │
-              ┌────────────────┴────────────────┐
-              ▼                                 ▼
-   docs/review/*-review.md          docs/progress/ patched
-              │
-              ▼
-   Reasoning partner (next session)
-     reads progress + review → decides on doc updates → writes ADRs
-              │
-              ▼
-   Human commits → PR → merge
-```
+- MVP baseline architecture is documented
+- Core aggregates, application handlers, persistence, read models, and API endpoints are implemented in the source project
+- Test suites exist for domain, application, infrastructure, and API layers
+- The next practical follow-up is running tests and database update commands in an environment with full .NET SDK and NuGet access
 
 ---
 
-## Conventions
+## Workflow
 
-- `docs/specs/` and `docs/decisions/` — written by the human (via reasoning partner)
-- `docs/review/` — generated by Codex CLI via `$review-ready`
-- `docs/progress/index.md` — incrementally patched on every `$review-ready` run
-- `docs/progress/features/` — one file per branch, written once, never modified after merge
-- `docs/architecture.md` and `docs/domain-model.md` — updated by the human after each review session
-- Codex CLI never runs git commands
-
----
-
-## License
-
-MIT. Use freely, adapt as needed.
+Use the reasoning partner to plan and write specs, then use Codex to implement and review. The quick operating guide is in `docs/workflow-guide.md`.

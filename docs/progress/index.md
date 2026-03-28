@@ -1,27 +1,30 @@
-# Build Progress — Feature Index
+# Build Progress - Feature Index
 
-<!-- MAINTAINED BY: Implementation agent via $review-ready (incremental patch only).
-     HUMAN: do not edit directly — update docs/progress/design-state.md for architectural ground truth.
-     REASONING PARTNER: read this at the start of every planning session. -->
-
-**Last updated**: <!-- YYYY-MM-DD, feature name -->
+**Last updated**: 2026-03-28, MVP baseline captured
 
 ---
 
-## How to read this file
+## How to Read This File
 
-- **Completed**: implemented, reviewed, and merged. Capped at 10 entries — older entries archived in `docs/progress/archive/`.
-- **In Progress**: on an active feature branch
-- **Planned**: spec exists in `docs/specs/`, not yet started
-- **Backlog**: discussed but no spec written yet
+- **Completed**: implemented and reflected in the current baseline
+- **In Progress**: active work not yet considered part of baseline
+- **Planned**: next concrete follow-up work
+- **Backlog**: intentionally out-of-scope or deferred ideas
 
-Check **Deviations** before planning any feature that touches the affected area.
+Check **Deviations** before planning features that touch the affected area.
 
 ---
 
 ## Completed
 
-_Nothing completed yet._
+- Solution scaffolding is in place with `Api`, `Application`, `Domain`, `Infrastructure`, `ReadModel`, and matching test projects
+- Domain aggregates are implemented for `WorkItem`, `WorkSession`, `Note`, and `Project`
+- Application commands, handlers, validation, warnings, and common result types are implemented
+- EF Core SQLite persistence, repositories, migrations, unit of work, and guard-rail constraints are implemented
+- Read model queries are implemented for active work, work item list, work item detail, timeline, and project list
+- Minimal API endpoints, Swagger, and the static UI host are implemented
+- Domain, application, infrastructure, and API test suites are present in the solution
+- Definition-of-done records and architecture updates are captured in the source project documentation
 
 ---
 
@@ -33,13 +36,17 @@ _Nothing in progress._
 
 ## Planned
 
-_No specs written yet._
+- Run `dotnet test` in an environment with full .NET SDK and NuGet access
+- Run database initialization/update flow in an environment with full EF tooling access
 
 ---
 
 ## Backlog
 
-_Empty._
+- Authentication and multi-user support if scope expands beyond the personal MVP
+- Analytics and reporting beyond the current operational views
+- Event-driven core business logic
+- Richer sharing or team-level aggregation workflows
 
 ---
 
@@ -53,4 +60,5 @@ _Empty._
 
 ## Open Architectural Questions
 
-_None._
+- When the MVP moves beyond local development, should SQLite remain the default or should PostgreSQL become the primary runtime target?
+- If multi-user support is introduced, should `ICurrentUser` remain host-configured or move behind real authentication/identity plumbing?

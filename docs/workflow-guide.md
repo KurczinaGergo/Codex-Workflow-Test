@@ -1,92 +1,76 @@
 # Workflow Guide
 
-This repository uses a two-role AI workflow. Quick reference — full reasoning in the [blog post](https://your-handle.github.io/your-blog-post).
+This repository uses a two-role AI workflow for WorkTrace: a reasoning partner handles planning and design, while Codex handles implementation and repository operations.
 
 ---
 
-## The two roles
+## The Two Roles
 
-| Role | What it does | Examples |
-|------|-------------|---------|
-| **Reasoning partner** | Planning, architecture, design trade-offs, spec writing | Claude Desktop, ChatGPT, Gemini Advanced |
-| **Implementation agent** | Writing code, running tests, operating across the repo | Codex CLI, Copilot Workspace, Cursor |
+| Role | What it does | WorkTrace examples |
+|------|--------------|--------------------|
+| **Reasoning partner** | Planning, trade-offs, spec writing, doc updates | Refine aggregate rules, decide architecture changes, write feature specs |
+| **Implementation agent** | Edit files, run tests, verify flows, prepare review output | Implement handlers, wire endpoints, update progress docs |
 
 ---
 
-## Core loop
+## Core Loop
 
-```
-Reasoning partner → spec → Implementation agent
-                               │
-                          /review-ready
-                               │
-              ┌────────────────┴────────────────┐
-              ▼                                 ▼
-   docs/review/*-review.md          docs/progress/ patched
-              │
-              ▼
-   Reasoning partner (next session)
-     reads progress + review → decides on doc updates → writes ADRs
-              │
-              ▼
-   Human commits → PR → merge
+```text
+Reasoning partner -> spec -> Implementation agent
+                              |
+                         /review-ready
+                              |
+              +---------------+----------------+
+              |                                |
+              v                                v
+   docs/review/*-review.md         docs/progress/ patched
+              |
+              v
+   Reasoning partner reviews changes, decides doc updates,
+   records ADRs if needed, then the human commits and merges
 ```
 
 ---
 
-## File responsibilities
+## File Responsibilities
 
 | File | Who writes it | Who reads it | Rule |
-|------|--------------|--------------|------|
+|------|---------------|--------------|------|
 | `docs/specs/*.md` | Human via reasoning partner | Implementation agent | One file per feature |
-| `docs/decisions/index.md` | Human | Implementation agent | ADR tag catalog — read before loading ADRs |
-| `docs/decisions/ADR-*.md` | Human via reasoning partner | Implementation agent | Load selectively via index tags |
-| `docs/review/*-review.md` | Implementation agent | Human + reasoning partner | Max 150 lines |
-| `docs/progress/index.md` | Implementation agent | Human + reasoning partner | Incremental patch on each `$review-ready` |
-| `docs/progress/design-state.md` | Human after review | Reasoning partner | ADR index, active constraints |
-| `docs/progress/features/*.md` | Implementation agent | Human | One per branch, never modified after merge |
-| `docs/progress/archive/*.md` | Implementation agent | Human | Overflow from index, append-only |
-| `docs/architecture.md` | Human after review | Implementation agent | Max 150 lines — split if larger |
-| `docs/domain-model.md` | Human after review | Implementation agent | Max 150 lines — split if larger |
-| `AGENTS.md` | Human | Implementation agent | Behavior rules only — no technical content |
+| `docs/decisions/index.md` | Human | Implementation agent | Read before any ADR file |
+| `docs/decisions/ADR-*.md` | Human via reasoning partner | Implementation agent | Load selectively by tags |
+| `docs/review/*-review.md` | Implementation agent | Human + reasoning partner | Keep concise and actionable |
+| `docs/progress/index.md` | Implementation agent | Human + reasoning partner | Incrementally update project status |
+| `docs/progress/design-state.md` | Human after review | Reasoning partner + implementation agent | Current architectural ground truth |
+| `docs/architecture.md` | Human-maintained living doc | Implementation agent | Read before cross-layer changes |
+| `docs/domain-model.md` | Human-maintained living doc | Implementation agent | Read before domain changes |
+| `AGENTS.md` | Human | Implementation agent | Behavior rules and navigation only |
 
 ---
 
-## Context window rules
+## Context Rules
 
-These rules prevent unnecessary token consumption as the project grows:
-
-- **`AGENTS.md` contains behavior, not knowledge.** Technical content lives in `docs/` only. No duplication.
-- **`_`-prefixed files are never read by the agent.** They are human-facing templates.
-- **Docs load on demand.** Each skill specifies which files to load. Nothing loads upfront.
-- **ADRs load selectively.** Read `docs/decisions/index.md`, load only ADRs whose tags match the feature's layers.
-- **`docs/progress/features/` never loads wholesale.** Access only the specific file needed.
-- **`docs/progress/index.md` patches incrementally.** `$review-ready` patches one row — never regenerates from all feature files.
-- **Size limits.** Review files: 150 lines. `docs/architecture.md` and `docs/domain-model.md`: 150 lines. Split into sub-files if exceeded.
+- `AGENTS.md` contains behavior and navigation, not deep technical detail
+- `_`-prefixed files are templates and should not be loaded during normal implementation work
+- Load docs on demand instead of reading the entire documentation tree
+- Read `docs/decisions/index.md` before opening ADR files
+- Treat `docs/progress/design-state.md` as the current source of truth if architecture has drifted
 
 ---
 
-## Skill reference
+## WorkTrace-Specific Planning Checklist
 
-| Command | When to use |
-|---------|-------------|
-| `$new-feature` | Start implementing a specced feature |
-| `$review-ready` | Feature implementation is complete |
-| `$review-fix` | Apply feedback from a reasoning partner session |
+- Read `docs/progress/index.md` before planning new work
+- Check `docs/progress/design-state.md` for active architectural constraints
+- Review `docs/architecture.md` for layer boundaries and DI ownership
+- Review `docs/domain-model.md` for WorkItem, WorkSession, Note, and Project rules
+- Check whether the work touches out-of-scope MVP areas such as auth, multi-user support, analytics, or event-driven core logic
 
 ---
 
-## Checklist: before a planning session
+## Current Baseline
 
-- [ ] Read `docs/progress/index.md` — what has been built?
-- [ ] Read `docs/progress/design-state.md` — which ADRs are active?
-- [ ] Read the relevant review file if a feature was recently merged
-- [ ] Check Open Architectural Questions in `docs/progress/index.md`
-
-## Checklist: before merging a feature branch
-
-- [ ] Review file exists in `docs/review/` and is under 150 lines
-- [ ] Feature file exists in `docs/progress/features/`
-- [ ] `docs/progress/index.md` is patched and up to date
-- [ ] Proposed doc updates from the review file have been decided (accepted or explicitly deferred)
-- [ ] Any new ADRs are written, tagged, and added to `docs/decisions/index.md`
+- MVP architecture and domain docs are populated
+- Core implementation phases are documented as completed
+- No ADRs are recorded yet
+- The main follow-up task is validating the solution in an environment with full .NET SDK and package access

@@ -1,19 +1,10 @@
-# Build Progress — Architectural Ground Truth
+# Build Progress - Architectural Ground Truth
 
-<!-- MAINTAINED BY: Human, after each review session.
-     REASONING PARTNER: read this file when planning features that touch architecture,
-     cross-cutting concerns, or anything that spans multiple layers.
-     This file answers: "what is the current architectural reality of this project?"
-     as distinct from the intended design in docs/architecture.md. -->
-
-**Last updated**: <!-- YYYY-MM-DD -->
+**Last updated**: 2026-03-28
 
 ---
 
 ## ADR Index
-
-<!-- Human: add a row for every accepted ADR.
-     Status: Draft | Accepted | Revised | Deprecated -->
 
 | ADR | Title | Status | Affects |
 |-----|-------|--------|---------|
@@ -23,40 +14,25 @@
 
 ## Active Design Constraints
 
-<!-- Human: list the architectural rules that are currently enforced in the codebase.
-     These may differ from docs/architecture.md if the design has evolved.
-     When a constraint changes, update here and create an ADR.
-
-     Example:
-     - All async methods must accept a CancellationToken — enforced since ADR-002
-     - The Domain layer has zero NuGet dependencies — enforced since project start
-     - ILLMProvider must never be called from the Application layer directly
--->
-
-_No constraints recorded yet._
+- The Domain layer owns local business invariants and should not depend on infrastructure concerns
+- The Application layer owns orchestration, warnings, validation flow, and transaction boundaries
+- One command equals one transaction
+- Read models stay separate from write-side repositories
+- Core business flow is explicit; domain events are not used to drive MVP core logic
+- The API layer stays thin and acts as the composition root
+- The runtime remains single-user in the MVP through a fixed configured `ICurrentUser`
+- SQLite is the current persistence target and migrations are part of startup flow
+- No cascade deletes; restrictive foreign keys and uniqueness constraints enforce safety
 
 ---
 
 ## Design Evolution Log
 
-<!-- Human: when a significant architectural decision is revised or superseded,
-     record it here with the date and the new ADR reference.
-     Do not delete history — only add.
-
-     Example:
-     - 2024-11-01: Moved retry logic from Application to Infrastructure (ADR-007 supersedes ADR-003)
--->
-
-_No evolution recorded yet._
+- 2026-03-28: Baseline architecture and domain state captured in this workflow repository from the current WorkTrace MVP documentation set
 
 ---
 
 ## Known Divergences from docs/architecture.md
-
-<!-- Human: list areas where the living architecture document has not yet been updated
-     to reflect the current codebase. These are candidates for the next doc update session.
-
-     Once docs/architecture.md is updated, remove the row here. -->
 
 | Area | Current reality | Planned doc update |
 |------|-----------------|--------------------|
