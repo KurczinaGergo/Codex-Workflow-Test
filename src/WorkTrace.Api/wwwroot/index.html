@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WorkTrace MVP</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">WorkTrace MVP</p>
+        <h1>Track the work, the time, and the context.</h1>
+        <p class="lede">A focused dashboard for one developer, one workspace, and zero workflow drag.</p>
+      </div>
+      <div class="hero-card">
+        <span class="muted">Current status</span>
+        <strong id="activeStatus">Loading...</strong>
+        <small id="activeMeta">Connecting to the API.</small>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Work items</h2>
+          <button id="refreshButton" type="button">Refresh</button>
+        </div>
+        <form id="workItemForm" class="form">
+          <input name="title" placeholder="Title" />
+          <select name="kind">
+            <option value="Task">Task</option>
+            <option value="Bug">Bug</option>
+          </select>
+          <input name="description" placeholder="Description" />
+          <button type="submit">Add work item</button>
+        </form>
+        <div id="workItems" class="stack"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Projects</h2>
+        </div>
+        <form id="projectForm" class="form">
+          <input name="name" placeholder="Project name" />
+          <button type="submit">Add project</button>
+        </form>
+        <div id="projects" class="stack"></div>
+      </section>
+
+      <section class="panel wide">
+        <div class="panel-head">
+          <h2>Timeline</h2>
+        </div>
+        <div id="timeline" class="stack"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

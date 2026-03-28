@@ -1,15 +1,23 @@
 # Codex CLI local files
 .codex/memory/
+.codex/runlogs/
 .codex/settings.local.json
 AGENTS.local.md
 
 # Progress archive (generated, not source)
 docs/progress/archive/
 
+# .NET build outputs
+**/bin/
+**/obj/
+TestResults/
+.vs/
+
 # Common
 *.db
 *.db-shm
 *.db-wal
+*.log
 node_modules/
 **/appsettings.Development.json
 **/appsettings.Local.json

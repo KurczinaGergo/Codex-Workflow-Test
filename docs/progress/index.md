@@ -1,6 +1,6 @@
 # Build Progress - Feature Index
 
-**Last updated**: 2026-03-28, MVP baseline captured
+**Last updated**: 2026-03-28, MVP bootstrapped and tested
 
 ---
 
@@ -24,7 +24,8 @@ Check **Deviations** before planning features that touch the affected area.
 - Read model queries are implemented for active work, work item list, work item detail, timeline, and project list
 - Minimal API endpoints, Swagger, and the static UI host are implemented
 - Domain, application, infrastructure, and API test suites are present in the solution
-- Definition-of-done records and architecture updates are captured in the source project documentation
+- `dotnet test .\WorkTrace.sln` passes in the current environment
+- Review bridge and feature progress records are captured in the source project documentation
 
 ---
 
@@ -36,7 +37,8 @@ _Nothing in progress._
 
 ## Planned
 
-- Run `dotnet test` in an environment with full .NET SDK and NuGet access
+- Wire the API host to the Application, Infrastructure, and ReadModel layers so the API becomes the thin composition root described in `docs/architecture.md`
+- Consolidate runtime abstractions so `IClock`, `ICurrentUser`, and `IUnitOfWork` live in the intended layer only
 - Run database initialization/update flow in an environment with full EF tooling access
 
 ---
@@ -54,7 +56,8 @@ _Nothing in progress._
 
 | Area | Original design | Actual implementation | Reason | ADR |
 |------|-----------------|-----------------------|--------|-----|
-| _(none yet)_ | | | | |
+| API composition | API stays thin and composes lower layers | API currently uses `MvpWorkTraceStore` inside `src/WorkTrace.Api` | The API/UI track was completed before lower-layer integration was reconciled | _(none yet)_ |
+| Bootstrap contracts | Application owns `IClock`, `ICurrentUser`, and `IUnitOfWork` abstractions | Infrastructure hosts duplicate bootstrap contracts | The infrastructure track shipped independently before architecture convergence | _(none yet)_ |
 
 ---
 
@@ -62,3 +65,5 @@ _Nothing in progress._
 
 - When the MVP moves beyond local development, should SQLite remain the default or should PostgreSQL become the primary runtime target?
 - If multi-user support is introduced, should `ICurrentUser` remain host-configured or move behind real authentication/identity plumbing?
+- Should the bootstrap API store be removed immediately in the next pass, or accepted temporarily while the layered integration is completed?
+- Should the duplicate `IClock`, `ICurrentUser`, and `IUnitOfWork` contracts be bridged first or removed in one cleanup step?
