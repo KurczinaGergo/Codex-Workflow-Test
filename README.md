@@ -33,7 +33,10 @@ The MVP is single-user, has no authentication, and deliberately avoids workflow 
 ```text
 /
 |-- AGENTS.md
+|-- agents/
+|   `-- auditor.md
 |-- docs/
+|   |-- Audit/
 |   |-- architecture.md
 |   |-- domain-model.md
 |   |-- workflow-guide.md
@@ -59,3 +62,5 @@ The MVP is single-user, has no authentication, and deliberately avoids workflow 
 ## Workflow
 
 Use the reasoning partner to plan and write specs, then use Codex to implement and review. The quick operating guide is in `docs/workflow-guide.md`.
+
+Audit mode is available through `agents/auditor.md` and writes workflow-level Mermaid reports plus run statistics into `docs/Audit/<timestamp>/` when the user stops an audit session.

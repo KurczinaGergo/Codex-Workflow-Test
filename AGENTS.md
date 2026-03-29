@@ -38,11 +38,13 @@ WorkTrace.sln
 
 agents/
   architect.md
+  auditor.md
   code_review.md
   documenting.md
   sw_technical_engineer.md
 
 docs/
+  Audit/
   architecture.md
   roadmap.md
   decisions/
@@ -69,6 +71,7 @@ tests/
 
 - Never read `_`-prefixed files unless the human explicitly asks for a template review
 - Never add new agents, skills, or workflow files unless the human explicitly requests them
+- `agents/auditor.md` is workflow-only: it audits agent coordination, not the target project
 - Never run git commands unless the human asks for version-control help
 - Never make independent architecture changes when docs and code disagree - surface the conflict and ask
 - Read `docs/architecture.md` before changing cross-layer behavior or dependency structure

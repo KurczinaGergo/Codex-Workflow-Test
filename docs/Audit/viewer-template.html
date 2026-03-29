@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workflow Audit Report</title>
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "neutral",
+      securityLevel: "loose"
+    });
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f1e8;
+      --panel: #fffaf2;
+      --ink: #1f1a17;
+      --muted: #6d6258;
+      --line: #d6c7b4;
+      --accent: #9a3412;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at top left, rgba(154, 52, 18, 0.08), transparent 28rem),
+        linear-gradient(180deg, #fbf6ee 0%, var(--bg) 100%);
+      color: var(--ink);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    h1,
+    h2 {
+      margin: 0 0 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .hero,
+    .panel {
+      background: rgba(255, 250, 242, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1.25rem;
+      box-shadow: 0 14px 30px rgba(31, 26, 23, 0.06);
+    }
+
+    .hero {
+      margin-bottom: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+
+    .panel pre {
+      margin: 0;
+      white-space: pre-wrap;
+      color: var(--ink);
+      font-family: "Cascadia Code", Consolas, monospace;
+      line-height: 1.5;
+    }
+
+    .mermaid {
+      overflow-x: auto;
+      background: white;
+      border-radius: 12px;
+      padding: 0.75rem;
+      border: 1px solid #ece3d5;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <h1>{{AUDIT_TITLE}}</h1>
+      <p>{{AUDIT_SUMMARY}}</p>
+    </section>
+
+    <div class="grid">
+      <section class="panel">
+        <h2>Sequence Diagram</h2>
+        <div class="mermaid">
+{{SEQUENCE_DIAGRAM}}
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Connection Graph</h2>
+        <div class="mermaid">
+{{TOPOLOGY_DIAGRAM}}
+        </div>
+      </section>
+    </div>
+
+    <section class="panel" style="margin-top: 1rem;">
+      <h2>Run Statistics</h2>
+      <pre>{{STATS_BODY}}</pre>
+    </section>
+  </main>
+</body>
+</html>

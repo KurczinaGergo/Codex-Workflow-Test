@@ -2,6 +2,8 @@
 
 This repository uses a two-role AI workflow for WorkTrace: a reasoning partner handles planning and design, while Codex handles implementation and repository operations.
 
+An optional audit overlay can be enabled by the user. When active, `AuditorAgent` records workflow interactions and emits audit artifacts when the user ends the audit.
+
 ---
 
 ## The Two Roles
@@ -29,6 +31,40 @@ Reasoning partner -> spec -> Implementation agent
    Reasoning partner reviews changes, decides doc updates,
    records ADRs if needed, then the human commits and merges
 ```
+
+---
+
+## Audit State
+
+Audit state is explicit and user-controlled.
+
+- The audit starts only when the user requests it
+- The audit stops only when the user requests it
+- While active, `AuditorAgent` records workflow events about users, agents, skills, and agent-to-agent communication
+- The audit covers the workflow itself, not the implementation project's internal source-code behavior
+- Every agent instance is logged as a distinct entity, even when multiple instances use the same agent markdown file
+
+The user is also part of the audit trail. User prompts should appear in the audit data with a short one-line summary that can be reused in Mermaid edge labels.
+
+---
+
+## Audit Outputs
+
+When the user stops an audit session, the workflow should create:
+
+`docs/Audit/<audit_timestamp>/`
+
+Expected contents:
+
+| File | Purpose |
+|------|---------|
+| `sequence.mmd` | Time-ordered Mermaid sequence diagram of user and agent interactions |
+| `topology.mmd` | Mermaid connection graph showing agent-instance relationships and aggregated call counts |
+| `stats.md` | Human-readable session and per-agent run statistics |
+| `events.json` | Raw workflow event log for regeneration or later analysis |
+| `index.html` | Browser-openable report that renders the diagrams and statistics |
+
+The sequence diagram should show why one entity contacted another using a one-line summary on each edge. The topology graph should label each edge with the number of calls between the same two entities.
 
 ---
 
